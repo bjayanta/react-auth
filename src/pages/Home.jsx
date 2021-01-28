@@ -12,6 +12,7 @@ class Home extends Component {
         return (
             <div className="container">
                 Home
+                { (this.props.loading) ? <h1>Loading ...</h1> : '' }
                 { this.props.isLoggedIn.toString() } 
             </div>
         )
@@ -21,8 +22,9 @@ class Home extends Component {
 // state
 const mapStateToProps = state => {
     return {
-        isLoggedIn: state.loginReducer.isLoggedIn,
-        user: state.loginReducer.user,
+        loading: state.authReducer.loading,
+        isLoggedIn: state.authReducer.isLoggedIn,
+        user: state.authReducer.user,
     }
 }
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
-import { login } from "../../services/actions/loginAction";
+import { login } from "../../services/actions/authAction";
+import { Redirect } from "react-router-dom";
 
 class Login extends Component {
     credential = {
@@ -9,6 +10,10 @@ class Login extends Component {
     }
 
     render() {
+
+        if(this.props.isLoggedIn) {
+            return <Redirect to='/' />
+        }
         
         return (
             <div className="container">
@@ -28,10 +33,10 @@ class Login extends Component {
 // state
 const mapStateToProps = (state) => {
     return {
-        loading: state.loginReducer.loading,
-        isLoggedIn: state.loginReducer.isLoggedIn,
-        user: state.loginReducer.user,
-        error: state.loginReducer.error,
+        loading: state.authReducer.loading,
+        isLoggedIn: state.authReducer.isLoggedIn,
+        user: state.authReducer.user,
+        error: state.authReducer.error,
     }
 }
 

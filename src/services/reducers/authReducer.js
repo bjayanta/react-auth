@@ -5,12 +5,13 @@ import {
 
 const initialState = {
     loading: false,
-    isLoggedIn: false,
-    user: [],
+    isLoggedIn: sessionStorage.getItem('isLoggedIn') ?? false,
+    authToken: sessionStorage.getItem('authToken') ?? '',
+    user: sessionStorage.getItem('user') ?? '',
     error: '' 
 }
 
-export default function loginReducer(state = initialState, action) {
+export default function authReducer(state = initialState, action) {
     switch (action.type) {
         case HTTP_REQUEST_STATE:
             return {
@@ -22,8 +23,9 @@ export default function loginReducer(state = initialState, action) {
             return {
                 ...state,
                 loading: false,
-                isLoggedIn: true,
-                user: action.payload
+                isLoggedIn: sessionStorage.getItem('isLoggedIn'),
+                authToken: sessionStorage.getItem('authToken'),
+                user: sessionStorage.getItem('user')
             }
         
         case HTTP_REQUEST_FAILED:
