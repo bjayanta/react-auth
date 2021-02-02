@@ -1,19 +1,18 @@
 import React, { Component } from 'react'
-import { connect } from "react-redux";
-import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 
 class Home extends Component {
-
     render() {
-        if(!this.props.isLoggedIn) {
-            return <Redirect to='/login' />
+        // check logged in or not 
+        if(!this.props.isLogged) {
+            return <Redirect to="/login" />
         }
 
         return (
-            <div className="container">
+            <div>
                 Home
-                { (this.props.loading) ? <h1>Loading ...</h1> : '' }
-                { this.props.isLoggedIn.toString() } 
+                <h3>Welcome { this.props.username }</h3>
             </div>
         )
     }
@@ -22,9 +21,10 @@ class Home extends Component {
 // state
 const mapStateToProps = state => {
     return {
-        loading: state.authReducer.loading,
-        isLoggedIn: state.authReducer.isLoggedIn,
-        user: state.authReducer.user,
+        isLogged: state.AuthReducer.isLogged,
+        username: state.AuthReducer.username,
+        email: state.AuthReducer.email,
+        error: state.AuthReducer.error
     }
 }
 

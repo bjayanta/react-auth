@@ -1,80 +1,113 @@
 import { 
-    HTTP_REQUEST_STATE,
-    HTTP_REQUEST_SUCCESS,
-    HTTP_REQUEST_FAILED } from "../types";
-import api from "../../utils/api";
+    HTTP_STATUS,
+    HTTP_SUCCESS,
+    HTTP_FAILED
+ } from "../types";
+import API from "../../utils/api";
 
 export const login = (credential) => {
     return async (dispatch) => {
         try {
             // loading
-            dispatch({type: HTTP_REQUEST_STATE})
+            dispatch({type: HTTP_STATUS})
 
             // axios
-            let response = await api.post('login', credential)
+            let response = await API.post('login', credential)
             console.log(response.data);
 
-            if(response.data.status_code === 200) {
-                // data
-                let isLoggedIn = true,
-                    authToken = response.data.token,
-                    user = JSON.stringify({
-                        "user": response.data.user.name,
-                        "email": response.data.user.email
-                    });
-                
-                // session storage
-                sessionStorage.setItem("isLoggedIn", isLoggedIn);
-                sessionStorage.setItem("authToken", authToken);
-                sessionStorage.setItem("user", user);
-                
-                // update state
-                dispatch({
-                    type: HTTP_REQUEST_SUCCESS,
-                    payload: user
-                })
-            }
+            // get response data
+            let token = response.data.token,
+                isLogged = true,
+                username = response.data.user.name,
+                email = response.data.user.email;
+            
+            // create session
+            sessionStorage.setItem("token", token)
+            sessionStorage.setItem("isLogged", isLogged)
+            sessionStorage.setItem("username", username)
+            sessionStorage.setItem("email", email)
+
+            // payload
+            dispatch({
+                type: HTTP_SUCCESS,
+                token: token,
+                isLogged: isLogged,
+                username: username,
+                email: email,
+                message: ''
+            })
         } catch (error) {
             dispatch({
-                type: HTTP_REQUEST_FAILED,
+                type: HTTP_FAILED,
                 payload: error.message
             })
         }
-        
-
     }
 }
 
+// logout
 export const logout = () => {
     return async (dispatch) => {
         try {
             // loading
-            dispatch({type: HTTP_REQUEST_STATE})
+            dispatch({type: HTTP_STATUS})
 
             // config
-            const config = {
-                headers: { Authorization: `Bearer ${sessionStorage.getItem('authToken')}` }
-            };
+            let config = {
+                headers: {
+                    "Authorization": "Bearer " + sessionStorage.getItem('token')
+                }
+            }
 
             // axios
-            let response = await api.post('logout', null, config)
+            let response = await API.post('logout', null, config)
             console.log(response.data);
-            
-            // clear session storage
-            sessionStorage.clear();
-            
-            // update state
+
+            // clear session
+            sessionStorage.clear()
+
+            // payload
             dispatch({
-                type: HTTP_REQUEST_SUCCESS,
-                payload: ''
+                type: HTTP_SUCCESS,
+                token: '',
+                isLogged: false,
+                username: '',
+                email: '',
+                message: 'You are logged out.'
             })
         } catch (error) {
             dispatch({
-                type: HTTP_REQUEST_FAILED,
+                type: HTTP_FAILED,
                 payload: error.message
             })
         }
-        
+    }
+}
 
+export const registration = (credential) => {
+    return async (dispatch) => {
+        try {
+            // loading
+            dispatch({type: HTTP_STATUS})
+
+            // axios
+            let response = await API.post('register', credential)
+            console.log(response.data);
+
+            // payload
+            dispatch({
+                type: HTTP_SUCCESS,
+                token: '',
+                isLogged: false,
+                username: '',
+                email: '',
+                message: 'Your registration successfully done.'
+            })
+        } catch (error) {
+            dispatch({
+                type: HTTP_FAILED,
+                payload: error.message
+            })
+        }
     }
 }

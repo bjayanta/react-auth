@@ -1,3 +1,3 @@
-export const HTTP_REQUEST_STATE = 'http_request_state'
-export const HTTP_REQUEST_SUCCESS = 'http_request_success'
-export const HTTP_REQUEST_FAILED = 'http_request_failed'
+export const HTTP_STATUS = 'http_status'
+export const HTTP_SUCCESS = 'http_success'
+export const HTTP_FAILED = 'http_failed'

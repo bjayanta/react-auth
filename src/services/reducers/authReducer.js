@@ -1,39 +1,47 @@
 import { 
-    HTTP_REQUEST_STATE, 
-    HTTP_REQUEST_SUCCESS, 
-    HTTP_REQUEST_FAILED } from "../types";
+    HTTP_STATUS,
+    HTTP_SUCCESS,
+    HTTP_FAILED
+ } from "../types";
 
 const initialState = {
     loading: false,
-    isLoggedIn: sessionStorage.getItem('isLoggedIn') ?? false,
-    authToken: sessionStorage.getItem('authToken') ?? '',
-    user: sessionStorage.getItem('user') ?? '',
-    error: '' 
+    token: sessionStorage.getItem('token') ?? '',
+    isLogged: sessionStorage.getItem('isLogged') ?? false,
+    username: sessionStorage.getItem('username') ?? '',
+    email: sessionStorage.getItem('email') ?? '',
+    message: '',
+    error: ''
 }
 
 export default function authReducer(state = initialState, action) {
     switch (action.type) {
-        case HTTP_REQUEST_STATE:
+        case HTTP_STATUS:
             return {
                 ...state,
-                loading: true,
+                loading: true
             }
 
-        case HTTP_REQUEST_SUCCESS:
+        case HTTP_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                isLoggedIn: sessionStorage.getItem('isLoggedIn'),
-                authToken: sessionStorage.getItem('authToken'),
-                user: sessionStorage.getItem('user')
+                token: action.token,
+                isLogged: action.isLogged,
+                username: action.username,
+                email: action.email,
+                message: action.message
             }
         
-        case HTTP_REQUEST_FAILED:
+        case HTTP_FAILED:
             return {
                 ...state,
                 loading: false,
-                isLoggedIn: false,
-                user: [],
+                token: '',
+                isLogged: false,
+                username: '',
+                email: '',
+                message: '',
                 error: action.payload
             }
     

@@ -1,29 +1,49 @@
 import React, { Component } from 'react'
 import { connect } from "react-redux";
+import { Redirect } from 'react-router-dom';
 import { login } from "../../services/actions/authAction";
-import { Redirect } from "react-router-dom";
 
 class Login extends Component {
-    credential = {
-        "email": "bjayanta.neo@gmail.com",
-        "password": "123456"
+
+    constructor() {
+        super();
+        this.state = {
+            "email": "",
+            "password": ""
+        }
+    }
+
+    formSubmitHandler = (e) => {
+        e.preventDefault()
+        this.props.login(this.state)
     }
 
     render() {
-
-        if(this.props.isLoggedIn) {
-            return <Redirect to='/' />
+        // check login value
+        if(this.props.isLogged) {
+            return <Redirect to="/" />
         }
-        
-        return (
-            <div className="container">
-                <h3>Login</h3>
 
-                <button onClick={ () => this.props.login(this.credential) }>Login</button>
+        return (
+            <div>
+                <h3>Login</h3>
+                <p>{ this.props.message }</p>
+
+                <form onSubmit={ this.formSubmitHandler  }>
+                    <div>
+                        <label htmlFor="email">Email</label>
+                        <input type="email" id="email" name="email" onChange={ (e) => this.setState({[e.target.name]: e.target.value}) } />
+                    </div>
+
+                    <div>
+                        <label htmlFor="password">Password</label>
+                        <input type="password" id="password" name="password" onChange={ (e) => this.setState({[e.target.name]: e.target.value}) } />
+                    </div>
+
+                    <button type="submit">Login</button>
+                </form>
 
                 { (this.props.loading) ? <h4>Loading ...</h4> : '' }
-                <p>{ this.props.isLoggedIn }</p>
-                {/* <p>{ this.props.user }</p> */}
                 <p>{ this.props.error }</p>
             </div>
         )
@@ -31,16 +51,16 @@ class Login extends Component {
 }
 
 // state
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
     return {
-        loading: state.authReducer.loading,
-        isLoggedIn: state.authReducer.isLoggedIn,
-        user: state.authReducer.user,
-        error: state.authReducer.error,
+        loading: state.AuthReducer.loading,
+        isLogged: state.AuthReducer.isLogged,
+        message: state.AuthReducer.message,
+        error: state.AuthReducer.error
     }
 }
 
-// dispatch
+// dispath
 const mapDispatchToProps = () => {
     return {
         login

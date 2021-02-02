@@ -1,13 +1,13 @@
-import { BrowserRouter } from "react-router-dom";
 import Navigation from "./components/Navigation";
-import AppRouter from "./components/AppRouter";
+import AppRoute from "./components/AppRoute";
+import { BrowserRouter } from "react-router-dom";
 
 function App() {
   return (
     <div>
       <BrowserRouter>
         <Navigation />
-        <AppRouter />
+        <AppRoute />
       </BrowserRouter>
     </div>
   );
